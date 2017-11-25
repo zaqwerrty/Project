@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>pROJECT</title>
+</head>
+<body>
+<canvas width="500" height="500" style="border: 2px solid black"></canvas>
+<script type="text/javascript">
+ctx = document.getElementsByTagName("canvas")[0].getContext("2d");
+ctx.fillStyle = "orange";
+x = 250, y = 250;
+dx = Math.PI/2, dy = 0, angle = 0;
+document.getElementsByTagName("canvas")[0].onmousemove = function(e)
+{
+dx = e.offsetX - x, dy = e.offsetY - y;
+angle = Math.atan2(dy, dx);
+}
+function int_main()
+{
+x += Math.cos(angle), y += Math.sin(angle);
+if(x-25 <= 0)
+{
+x = 25;
+}
+else if(x+25 >= 500)
+{
+x = 475;
+}
+if(y <= 25)
+{
+y = 25;
+}
+else if(y >= 475)
+{
+y = 475;
+}
+ctx.clearRect(0, 0, 500, 500);
+ctx.fillRect(x-25, y-25, 50, 50);
+}
+setInterval(int_main, 1000/60);
+</script>
+</body>
+</html>
