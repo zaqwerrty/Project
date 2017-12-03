@@ -1,44 +1,108 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>pROJECT</title>
-</head>
-<body>
-<canvas width="500" height="500" style="border: 2px solid black"></canvas>
-<script type="text/javascript">
-ctx = document.getElementsByTagName("canvas")[0].getContext("2d");
-ctx.fillStyle = "orange";
-x = 250, y = 250;
-dx = Math.PI/2, dy = 0, angle = 0;
-document.getElementsByTagName("canvas")[0].onmousemove = function(e)
-{
-dx = e.offsetX - x, dy = e.offsetY - y;
-angle = Math.atan2(dy, dx);
-}
-function int_main()
-{
-x += Math.cos(angle), y += Math.sin(angle);
-if(x-25 <= 0)
-{
-x = 25;
-}
-else if(x+25 >= 500)
-{
-x = 475;
-}
-if(y <= 25)
-{
-y = 25;
-}
-else if(y >= 475)
-{
-y = 475;
-}
-ctx.clearRect(0, 0, 500, 500);
-ctx.fillRect(x-25, y-25, 50, 50);
-}
-setInterval(int_main, 1000/60);
-</script>
-</body>
+<html> 
+    <head>  
+        <meta charset="UTF-8">  
+        <title>Super Project</title>
+  <style type="text/css">   
+      canvas   
+      {    
+          border: 2px solid black;
+          background: #eeeeee;
+      }
+   #container
+      {
+          width: 510px;
+          height: 510px;
+          margin: 50px auto;
+          position: relative;
+      }
+   #options
+      {
+          width: 150px;
+          height: 150px;
+          position: absolute;
+          left: 195px;
+      }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <canvas width="500" height="500">
+            </canvas>
+   <div id="options">
+       <input type="color">
+       <button>Запуск!</button>
+            </div> 
+        </div>
+  <script type="text/javascript">
+      window.onload = function()   
+      {
+          var cns = document.getElementsByTagName("canvas")[0], ctx = cns.getContext("2d");
+          var _button = document.getElementsByTagName("button")[0];
+          var _color = document.getElementsByTagName("input")[0];
+    function objCircle(x, y, r)    
+          {
+              var that = this;
+              var angle = null;
+              var dy = null, dx = null;
+     that.x = x;
+              that.y = y;
+              that.r = r;
+              that.cX = null;
+              that.cY = null; 
+          }
+    objCircle.prototype.update = function()    
+    {     var that = this;
+     dx = that.cX - that.x;
+     dy = that.cY - that.y;
+     angle = Math.atan2(dy, dx);
+     that.x += Math.cos(angle);     
+     if(that.x <= that.r)     
+     {      
+         that.x = that.r;
+     }    
+     else if(that.x >= 500-that.r)    
+     {    
+         that.x = 500-that.r;
+     }
+     that.y += Math.sin(angle);
+     if(that.y <= that.r)     
+     {
+         that.y = that.r;
+     }     
+     else if(that.y >= 500-that.r)    
+     {     
+         that.y = 500-that.r;   
+     } 
+    }
+    objCircle.prototype.draw = function(color)   
+    {   
+        var that = this;
+        var color = color || "orange";
+     ctx.beginPath();   
+        ctx.fillStyle = color;
+        ctx.arc(that.x, that.y, that.r, 0, 2*Math.PI);   
+        ctx.fill();
+    }
+    _button.addEventListener("click", function()   
+                             {     _button.disabled = true;     var temp = new objCircle(225, 225, 25);     go_go(temp);    });
+    function go_go(obj)    
+          {
+              cns.addEventListener("mousemove", function(e)     
+                                   {
+                  obj.cX = e.offsetX;  
+                  obj.cY = e.offsetY;   
+              });   
+              setTimeout(gameLoop, 10, obj); 
+          }
+    function gameLoop(o) 
+          { 
+              ctx.clearRect(0, 0, cns.width, cns.height);
+     var color = _color.value;
+     o.update();     o.draw(color);
+     setTimeout(gameLoop, 1000/60, o);    
+          }
+      } 
+        </script>
+    </body>
 </html>
